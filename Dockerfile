@@ -59,7 +59,7 @@ WORKDIR /app
 COPY . /app
 
 # Expose the API ports
-EXPOSE 8000 8001
+EXPOSE 8870 8871
 
-# Default command to run both APIs
-CMD ["Rscript", "-e", "plumber::plumb('plumber_archetypal.R')$run(port=8000) & plumber::plumb('plumber_diversity.R')$run(port=8001)"]
+# Default command to run the APIs on ports 8870 and 8871
+CMD ["Rscript", "-e", "plumber::plumb('/app/plumber_diversity.R')$run(host='0.0.0.0', port=8870); plumber::plumb('/app/plumber_archetypal.R')$run(host='0.0.0.0', port=8871)"]
