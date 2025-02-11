@@ -5,5 +5,5 @@ services:
     container_name: skillab-trigoniaris-diversity
     build: .
     ports:
-      - "8871:8870"
+      - "8870:8870"
     restart: unless-stopped
