@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  skillab-analysis:
+    container_name: skillab-trigoniaris-diversity
+    build: .
+    ports:
+      - "8871:8870"
+    restart: unless-stopped

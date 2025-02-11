@@ -9,6 +9,9 @@ RUN apt-get update && apt-get install -y \
     libgdal-dev \
     libudunits2-dev \
     libfontconfig1-dev \
+    && rm -rf /var/lib/apt/lists/*
+	
+RUN apt-get update && apt-get install -y \
     libcurl4-openssl-dev \
     libssl-dev \
     libxml2-dev \
@@ -17,10 +20,16 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libtiff5-dev \
     libjpeg-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install -y \
     libglu1-mesa-dev \
     libx11-dev \
     libxt-dev \
     && rm -rf /var/lib/apt/lists/*
+
+# Install R packages
+#RUN R -e "install.packages(c('plumber', 'httr', 'dplyr', 'readxl', 'ggplot2', 'plotly', 'tidyverse', 'archetypes', 'Anthropometry', 'SpadeR', 'fmsb', 'ggradar', 'jsonlite', 'formatR', 'shiny', 'DT', 'shinyBS'), repos='https://cran.rstudio.com')"
 
 RUN R -e "install.packages('remotes', repos='https://cran.rstudio.com')"
 RUN R -e "remotes::install_github('ricardo-bion/ggradar')"
@@ -50,7 +59,7 @@ WORKDIR /app
 COPY . /app
 
 # Expose the API ports
-EXPOSE 8870
+EXPOSE 8870 8871
 
-# Default command to run the APIs on ports 8870
-CMD ["Rscript", "-e", "plumber::plumb('/app/plumber_diversity_new.R')$run(host='0.0.0.0', port=8870)"]
+# Default command to run the APIs on ports 8870 and 8871
+CMD ["Rscript", "-e", "plumber::plumb('/app/plumber_diversity.R')$run(host='0.0.0.0', port=8870)"]
