@@ -2,11 +2,11 @@ version: '3.8'
 
 services:
   skillab-analysis:
-    container_name: skillab-trigoniaris-diversity
+    container_name: ${APP_NAME}
     image: ${DOCKER_REG}${DOCKER_REPO}${APP_NAME}:${DOCKER_TAG}
     build: .
     ports:
       - "8870:8870"
     labels:
-      io.portainer.accesscontrol.teams: skillab-all
+      io.portainer.accesscontrol.teams: trace-all
     restart: unless-stopped
