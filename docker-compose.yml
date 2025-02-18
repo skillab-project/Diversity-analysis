@@ -8,5 +8,5 @@ services:
     ports:
       - "8870:8870"
     labels:
-      io.portainer.accesscontrol.teams: trace-all
+      io.portainer.accesscontrol.teams: skillab-all
     restart: unless-stopped
