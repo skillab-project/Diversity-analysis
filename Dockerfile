@@ -52,5 +52,5 @@ COPY . /app
 # Expose the API ports
 EXPOSE 8870
 
-# Default command to run the APIs on ports 8870
-CMD ["Rscript", "-e", "plumber::plumb('/app/plumber_diversity_new.R')$run(host='0.0.0.0', port=8870)"]
+# Default command to run the APIs on port 8870
+CMD ["Rscript", "-e", "plumber::plumb('/app/plumber_diversity_script.R')$run(host='0.0.0.0', port=8870)"]

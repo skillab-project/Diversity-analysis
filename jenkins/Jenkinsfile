@@ -5,7 +5,7 @@ pipeline {
         }
     }
     environment {
-        APP_NAME = "diversity-analysis"
+        APP_NAME = "skillab-diversity"
         MAJOR_RELEASE = 0.1
         DOCKER_TAG = "${MAJOR_RELEASE}.${env.BUILD_NUMBER}"
         DOCKER_REG = "harbor.skillab-project.eu"
@@ -20,7 +20,13 @@ pipeline {
         stage("Build_Docker_Images"){
             steps {
                 echo "***** Building Docker Image *****"
-                sh 'DOCKER_TAG=test docker compose build'
+                withCredentials([usernamePassword(credentialsId: 'tracker-api-creds', usernameVariable: 'TRACKER_USER', passwordVariable: 'TRACKER_PASS')]) {
+                    sh '''
+                        echo "USERNAME=${TRACKER_USER}" >> .env
+                        echo "PASSWORD=${TRACKER_PASS}" >> .env
+                        DOCKER_TAG=test docker compose build
+                    '''
+                }
             }
         }
 

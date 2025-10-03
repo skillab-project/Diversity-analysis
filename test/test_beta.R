@@ -1,0 +1,17 @@
+################ Test alpha ################
+source('./test/R_functions/beta_diversity.R')
+
+
+
+test_beta<-function(call){
+  load('./test/R_functions/dataset.Rda')
+  res_case<-beta_diversity(dataset_sorted)
+  load('./test/R_functions/expected_results_beta.Rda')
+  if(identical(res,res_case)){
+    msg<-'Beta Diversity Analysis ------------------------- passed'
+    return(list(Message=msg,Pass=1))
+  }else{
+    msg<-'Beta Diversity Analysis ------------------------- failed'
+    return(list(Message=msg,Pass=0))
+  }
+}
