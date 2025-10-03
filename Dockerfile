@@ -22,26 +22,36 @@ RUN apt-get update && apt-get install -y \
     libxt-dev \
     && rm -rf /var/lib/apt/lists/*
 
+# Ensure remotes is installed for GitHub packages
 RUN R -e "install.packages('remotes', repos='https://cran.rstudio.com')"
-RUN R -e "remotes::install_github('ricardo-bion/ggradar')"
 
-RUN R -e "install.packages('plumber')"
-RUN R -e "install.packages('ggradar')"
-RUN R -e "install.packages('httr')"
-RUN R -e "install.packages('dplyr')"
-RUN R -e "install.packages('readxl')"
-RUN R -e "install.packages('ggplot2')"
-RUN R -e "install.packages('plotly')"
-RUN R -e "install.packages('tidyverse')"
-RUN R -e "install.packages('archetypes')"
-RUN R -e "install.packages('Anthropometry')"
-RUN R -e "install.packages('SpadeR')"
-RUN R -e "install.packages('fmsb')"
-RUN R -e "install.packages('jsonlite')"
-RUN R -e "install.packages('formatR')"
-RUN R -e "install.packages('shiny')"
-RUN R -e "install.packages('DT')"
-RUN R -e "install.packages('shinyBS')"
+# GitHub-only packages
+RUN R -e "remotes::install_github('ricardo-bion/ggradar')"
+RUN R -e "remotes::install_github('eubatool/jakR')"
+
+# CRAN packages
+RUN R -e "install.packages(c( \
+  'plumber', \
+  'readxl', \
+  'SpadeR', \
+  'DT', \
+  'plotly', \
+  'fmsb', \
+  'tidyverse', \
+  'ggplot2', \
+  'archetypes', \
+  'Anthropometry', \
+  'shinyBS', \
+  'formatR', \
+  'jsonlite', \
+  'httr', \
+  'vegan', \
+  'dplyr', \
+  'indicspecies', \
+  'shiny', \
+  'dotenv' \
+), repos='https://cran.rstudio.com')"
+
 
 RUN R -e "if (!requireNamespace('plumber', quietly = TRUE)) { stop('plumber not installed') }"
 
