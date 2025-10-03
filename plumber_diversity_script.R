@@ -21,6 +21,7 @@ library(ggplot2)
 load('./Extras/New_occupation_table.Rda')
 source('./Extras/Diversity_analysis_KUs.R')
 source('./Extras/Required_skill_matching.R')
+source('./Extras/Diversity_analysis_organization_KUs.R')
 
 
 #* @apiTitle Diversity Microservice
@@ -72,6 +73,29 @@ function(start_date=NULL,end_date=NULL) {
   })
 }
 
+
+#* @apiTitle Diversity-Kus-Organization Microservice
+#* @apiDescription API for diversity calculators for KUs Analysis
+
+
+#* @param start_date:string (Optional) Start of timestamp filter, in year-month-day format (e.g. "2025-06")
+#* @param end_date:string (Optional) End of timestamp filter, in year-month-day format(e.g. "2025-07")
+#* @post /diversity_kus_organization
+function(start_date=NULL,end_date=NULL) {
+  
+  
+  
+  # Call the main diversity function
+  tryCatch({
+    res<-kus_results(start_date,end_date)
+    
+    data = list(res)
+    
+  }, error = function(e) {
+    message = e$message
+    
+  })
+}
 
 
 
