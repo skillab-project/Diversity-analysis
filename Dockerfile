@@ -33,33 +33,27 @@ RUN apt-get update && apt-get install -y \
 # Ensure remotes is installed for GitHub packages
 RUN R -e "install.packages('remotes', repos='https://cran.rstudio.com')"
 
-# GitHub-only packages
-#RUN R -e "remotes::install_github('ricardo-bion/ggradar')"
-
-# CRAN packages
-RUN R -e "install.packages(c( \
-  'plumber', \
-  'readxl', \
-  'SpadeR', \
-  'DT', \
-  'plotly', \
-  'fmsb', \
-  'tidyverse', \
-  'ggplot2', \
-  'archetypes', \
-  'Anthropometry', \
-  'shinyBS', \
-  'formatR', \
-  'jsonlite', \
-  'httr', \
-  'vegan', \
-  'dplyr', \
-  'indicspecies', \
-  'shiny', \
-  'ggradar', \
-  'jakR', \
-  'dotenv' \
-), repos='https://cran.rstudio.com')"
+RUN R -e "install.packages('plumber')"
+RUN R -e "install.packages('readxl')"
+RUN R -e "install.packages('SpadeR')"
+RUN R -e "install.packages('DT')"
+RUN R -e "install.packages('plotly')"
+RUN R -e "install.packages('fmsb')"
+RUN R -e "install.packages('tidyverse')"
+RUN R -e "install.packages('ggplot2')"
+RUN R -e "install.packages('archetypes')"
+RUN R -e "install.packages('Anthropometry')"
+RUN R -e "install.packages('shinyBS')"
+RUN R -e "install.packages('formatR')"
+RUN R -e "install.packages('jsonlite')"
+RUN R -e "install.packages('httr')"
+RUN R -e "install.packages('vegan')"
+RUN R -e "install.packages('dplyr')"
+RUN R -e "install.packages('indicspecies')"
+RUN R -e "install.packages('shiny')"
+RUN R -e "install.packages('ggradar')"
+RUN R -e "install.packages('jakR')"
+RUN R -e "install.packages('dotenv')"
 
 
 # For jakR, use clone + install to see errors clearly
