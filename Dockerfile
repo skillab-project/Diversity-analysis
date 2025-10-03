@@ -34,8 +34,7 @@ RUN apt-get update && apt-get install -y \
 RUN R -e "install.packages('remotes', repos='https://cran.rstudio.com')"
 
 # GitHub-only packages
-RUN R -e "remotes::install_github('ricardo-bion/ggradar')"
-#RUN R -e "remotes::install_github('eubatool/jakR')"
+#RUN R -e "remotes::install_github('ricardo-bion/ggradar')"
 
 # CRAN packages
 RUN R -e "install.packages(c( \
@@ -58,6 +57,7 @@ RUN R -e "install.packages(c( \
   'indicspecies', \
   'shiny', \
   'ggradar', \
+  'jakR', \
   'dotenv' \
 ), repos='https://cran.rstudio.com')"
 
