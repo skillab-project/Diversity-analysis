@@ -63,7 +63,7 @@ RUN R -e "install.packages(c( \
 
 
 # For jakR, use clone + install to see errors clearly
-RUN R -e "remotes::install_github('eubatool/jakR')"
+#RUN R -e "remotes::install_github('eubatool/jakR')"
 
 
 
