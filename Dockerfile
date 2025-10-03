@@ -22,12 +22,20 @@ RUN apt-get update && apt-get install -y \
     libxt-dev \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get install -y \
+    git \
+    build-essential \
+    libssl-dev \
+    libcurl4-openssl-dev \
+    libxml2-dev
+
+
 # Ensure remotes is installed for GitHub packages
 RUN R -e "install.packages('remotes', repos='https://cran.rstudio.com')"
 
 # GitHub-only packages
 RUN R -e "remotes::install_github('ricardo-bion/ggradar')"
-RUN R -e "remotes::install_github('eubatool/jakR')"
+#RUN R -e "remotes::install_github('eubatool/jakR')"
 
 # CRAN packages
 RUN R -e "install.packages(c( \
@@ -49,8 +57,14 @@ RUN R -e "install.packages(c( \
   'dplyr', \
   'indicspecies', \
   'shiny', \
+  'ggradar', \
   'dotenv' \
 ), repos='https://cran.rstudio.com')"
+
+
+# For jakR, use clone + install to see errors clearly
+RUN R -e "remotes::install_github('eubatool/jakR')"
+
 
 
 RUN R -e "if (!requireNamespace('plumber', quietly = TRUE)) { stop('plumber not installed') }"
