@@ -22,14 +22,11 @@ RUN apt-get update && apt-get install -y \
     libxt-dev \
     git \
     build-essential \
-    # NEW: Added libsodium-dev for the 'sodium' R package
     libsodium-dev \
-    # NEW: Added libharfbuzz-dev and libfribidi-dev for 'textshaping' R package
     libharfbuzz-dev \
     libfribidi-dev \
-    # NEW: Potentially needed for graphics and some ragg dependencies
     pkg-config \
-    # Consider adding these for full graphics capability if needed, though for headless API, not strictly essential for build
+    # Potentially needed for graphics and some ragg dependencies (uncomment if issues persist)
     # libglpk-dev \
     # libgmp-dev \
     # libxft-dev \
@@ -38,11 +35,12 @@ RUN apt-get update && apt-get install -y \
 # Install R packages.
 # Combine all R package installations into a single RUN command to optimize Docker layers.
 # Use 'remotes::install_github' for packages not on CRAN.
-# NOTE: ggradar is now installed from CRAN.
-# For jakR, 'remotes::install_github' is the correct approach.
+# NOTE: ggradar is now installed from GitHub.
+# IMPORTANT: You MUST update the 'eubatool/jakR' path to the correct one if it's different.
 # Use Ncpus argument to speed up installation.
-RUN R -e "install.packages(c('remotes', 'plumber', 'readxl', 'SpadeR', 'DT', 'plotly', 'fmsb', 'tidyverse', 'ggplot2', 'archetypes', 'Anthropometry', 'shinyBS', 'formatR', 'jsonlite', 'httr', 'vegan', 'dplyr', 'indicspecies', 'shiny', 'dotenv', 'ggradar'), repos='${CRAN_MIRROR}', Ncpus = parallel::detectCores() -1)" && \
-    R -e "remotes::install_github('eubatool/jakR')"
+RUN R -e "install.packages(c('remotes', 'plumber', 'readxl', 'SpadeR', 'DT', 'plotly', 'fmsb', 'tidyverse', 'ggplot2', 'archetypes', 'Anthropometry', 'shinyBS', 'formatR', 'jsonlite', 'httr', 'vegan', 'dplyr', 'indicspecies', 'shiny', 'dotenv'), repos='${CRAN_MIRROR}', Ncpus = parallel::detectCores() -1)" && \
+    R -e "remotes::install_github('gimoya/ggradar')" && \
+    R -e "remotes::install_github('eubatool/jakR')" # <--- REMEMBER TO UPDATE THIS LINE IF 'eubatool/jakR' IS INCORRECT!
 
 
 # Verify plumber installation (good practice)
