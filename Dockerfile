@@ -22,16 +22,26 @@ RUN apt-get update && apt-get install -y \
     libxt-dev \
     git \
     build-essential \
+    # NEW: Added libsodium-dev for the 'sodium' R package
+    libsodium-dev \
+    # NEW: Added libharfbuzz-dev and libfribidi-dev for 'textshaping' R package
+    libharfbuzz-dev \
+    libfribidi-dev \
+    # NEW: Potentially needed for graphics and some ragg dependencies
+    pkg-config \
+    # Consider adding these for full graphics capability if needed, though for headless API, not strictly essential for build
+    # libglpk-dev \
+    # libgmp-dev \
+    # libxft-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install R packages.
 # Combine all R package installations into a single RUN command to optimize Docker layers.
 # Use 'remotes::install_github' for packages not on CRAN.
-# For ggradar, specify the 'ggradar' branch as it's often more up-to-date or stable than master for that package.
+# NOTE: ggradar is now installed from CRAN.
 # For jakR, 'remotes::install_github' is the correct approach.
 # Use Ncpus argument to speed up installation.
-RUN R -e "install.packages(c('remotes', 'plumber', 'readxl', 'SpadeR', 'DT', 'plotly', 'fmsb', 'tidyverse', 'ggplot2', 'archetypes', 'Anthropometry', 'shinyBS', 'formatR', 'jsonlite', 'httr', 'vegan', 'dplyr', 'indicspecies', 'shiny', 'dotenv'), repos='${CRAN_MIRROR}', Ncpus = parallel::detectCores() -1)" && \
-    R -e "remotes::install_github('ricardo-bion/ggradar', ref = 'ggradar')" && \
+RUN R -e "install.packages(c('remotes', 'plumber', 'readxl', 'SpadeR', 'DT', 'plotly', 'fmsb', 'tidyverse', 'ggplot2', 'archetypes', 'Anthropometry', 'shinyBS', 'formatR', 'jsonlite', 'httr', 'vegan', 'dplyr', 'indicspecies', 'shiny', 'dotenv', 'ggradar'), repos='${CRAN_MIRROR}', Ncpus = parallel::detectCores() -1)" && \
     R -e "remotes::install_github('eubatool/jakR')"
 
 
