@@ -1,17 +1,17 @@
-# Use the official R base image
-FROM rocker/rstudio:latest
+# Use the official R base image. Using a specific version is generally better for reproducibility.
+FROM rocker/r-ver:4.3.1
+
+# Set CRAN mirror for R package installations
+ENV CRAN_MIRROR https://cran.rstudio.com
 
 # Install system dependencies for R packages
+# Group related apt-get commands to reduce image layers
 RUN apt-get update && apt-get install -y \
     libcurl4-openssl-dev \
     libssl-dev \
     libxml2-dev \
     libgdal-dev \
     libudunits2-dev \
-    libfontconfig1-dev \
-    libcurl4-openssl-dev \
-    libssl-dev \
-    libxml2-dev \
     libfontconfig1-dev \
     libfreetype6-dev \
     libpng-dev \
@@ -20,47 +20,22 @@ RUN apt-get update && apt-get install -y \
     libglu1-mesa-dev \
     libx11-dev \
     libxt-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN apt-get update && apt-get install -y \
     git \
     build-essential \
-    libssl-dev \
-    libcurl4-openssl-dev \
-    libxml2-dev
+    && rm -rf /var/lib/apt/lists/*
+
+# Install R packages.
+# Combine all R package installations into a single RUN command to optimize Docker layers.
+# Use 'remotes::install_github' for packages not on CRAN.
+# For ggradar, specify the 'ggradar' branch as it's often more up-to-date or stable than master for that package.
+# For jakR, 'remotes::install_github' is the correct approach.
+# Use Ncpus argument to speed up installation.
+RUN R -e "install.packages(c('remotes', 'plumber', 'readxl', 'SpadeR', 'DT', 'plotly', 'fmsb', 'tidyverse', 'ggplot2', 'archetypes', 'Anthropometry', 'shinyBS', 'formatR', 'jsonlite', 'httr', 'vegan', 'dplyr', 'indicspecies', 'shiny', 'dotenv'), repos='${CRAN_MIRROR}', Ncpus = parallel::detectCores() -1)" && \
+    R -e "remotes::install_github('ricardo-bion/ggradar', ref = 'ggradar')" && \
+    R -e "remotes::install_github('eubatool/jakR')"
 
 
-# Ensure remotes is installed for GitHub packages
-RUN R -e "install.packages('remotes', repos='https://cran.rstudio.com')"
-
-RUN R -e "install.packages('plumber')"
-RUN R -e "install.packages('readxl')"
-RUN R -e "install.packages('SpadeR')"
-RUN R -e "install.packages('DT')"
-RUN R -e "install.packages('plotly')"
-RUN R -e "install.packages('fmsb')"
-RUN R -e "install.packages('tidyverse')"
-RUN R -e "install.packages('ggplot2')"
-RUN R -e "install.packages('archetypes')"
-RUN R -e "install.packages('Anthropometry')"
-RUN R -e "install.packages('shinyBS')"
-RUN R -e "install.packages('formatR')"
-RUN R -e "install.packages('jsonlite')"
-RUN R -e "install.packages('httr')"
-RUN R -e "install.packages('vegan')"
-RUN R -e "install.packages('dplyr')"
-RUN R -e "install.packages('indicspecies')"
-RUN R -e "install.packages('shiny')"
-RUN R -e "install.packages('ggradar')"
-RUN R -e "install.packages('jakR')"
-RUN R -e "install.packages('dotenv')"
-
-
-# For jakR, use clone + install to see errors clearly
-#RUN R -e "remotes::install_github('eubatool/jakR')"
-
-
-
+# Verify plumber installation (good practice)
 RUN R -e "if (!requireNamespace('plumber', quietly = TRUE)) { stop('plumber not installed') }"
 
 # Copy your application code to the Docker container
