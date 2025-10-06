@@ -34,13 +34,10 @@ RUN apt-get update && apt-get install -y \
 
 # Install R packages.
 # Combine all R package installations into a single RUN command to optimize Docker layers.
-# Use 'remotes::install_github' for packages not on CRAN.
-# NOTE: ggradar is now installed from GitHub.
-# IMPORTANT: You MUST update the 'eubatool/jakR' path to the correct one if it's different.
+# Using 'remotes::install_github' for jakR with the corrected repository.
 # Use Ncpus argument to speed up installation.
 RUN R -e "install.packages(c('remotes', 'plumber', 'readxl', 'SpadeR', 'DT', 'plotly', 'fmsb', 'tidyverse', 'ggplot2', 'archetypes', 'Anthropometry', 'shinyBS', 'formatR', 'jsonlite', 'httr', 'vegan', 'dplyr', 'indicspecies', 'shiny', 'dotenv'), repos='${CRAN_MIRROR}', Ncpus = parallel::detectCores() -1)" && \
-    R -e "remotes::install_github('gimoya/ggradar')" && \
-    R -e "remotes::install_github('eubatool/jakR')" # <--- REMEMBER TO UPDATE THIS LINE IF 'eubatool/jakR' IS INCORRECT!
+    R -e "remotes::install_github('jeffkimbrel/jakR')"
 
 
 # Verify plumber installation (good practice)
