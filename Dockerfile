@@ -24,9 +24,9 @@ RUN apt-get update && apt-get install -y \
     libharfbuzz-dev \
     libfribidi-dev \
     pkg-config \
-    cron \ # <--- Added cron here (good)
+    cron \
     && rm -rf /var/lib/apt/lists/*
-
+	
 # Install R packages.
 RUN R -e "install.packages(c('remotes', 'plumber', 'readxl', 'SpadeR', 'DT', 'plotly', 'fmsb', 'tidyverse', 'ggplot2', 'archetypes', 'Anthropometry', 'shinyBS', 'formatR', 'jsonlite', 'httr', 'vegan', 'dplyr', 'indicspecies', 'shiny', 'dotenv'), repos='${CRAN_MIRROR}', Ncpus = parallel::detectCores() -1)" && \
     R -e "remotes::install_github('jeffkimbrel/jakR')"
