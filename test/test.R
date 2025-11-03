@@ -5,6 +5,9 @@ source('./test/test_beta.R')
 source('./test/test_isa.R')
 
 
+options(rgl.useNULL = TRUE) # for headless error
+
+
 passed<-0
 tests<-c('Alpha Diversity ---------------','Beta Diversity ---------------','ISA ---------------')
 test_keys<-c('A','B','I')

@@ -1,3 +1,8 @@
+
+
+options(rgl.useNULL = TRUE) # for headless error
+
+
 ############ Description: occupation selection and table construction for biodiversity analysis  --- all occupations################
 #################### load data #######
 load('./Extras/New_occupation_table.Rda')

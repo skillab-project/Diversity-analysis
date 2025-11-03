@@ -20,6 +20,9 @@ library(jakR)
 library(indicspecies)
 
 
+
+options(rgl.useNULL = TRUE) # for headless error
+
 beta_diversity<-function(dataset){
   dataset<-dataset[!rowSums(dataset[2:ncol(dataset)])==0,]
   row_sums <- rowSums(dataset[2:ncol(dataset)])

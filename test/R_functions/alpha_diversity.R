@@ -21,6 +21,9 @@ library(jakR)
 library(indicspecies)
 
 
+options(rgl.useNULL = TRUE) # for headless error
+
+
 ###Function
 alpha_diversity <- function(dataset){
   

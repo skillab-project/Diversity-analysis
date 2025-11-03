@@ -1,6 +1,9 @@
 ###################### Occupation_Table_Construction ##############
 library(httr)
 
+
+options(rgl.useNULL = TRUE) # for headless error
+
 headers = c(
   accept = "application/json",
   `Content-Type` = "application/x-www-form-urlencoded"

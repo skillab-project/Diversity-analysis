@@ -1,6 +1,9 @@
 ###############Test ISA ##########################
 source('./test/R_functions/isa_diversity.R')
 
+
+options(rgl.useNULL = TRUE) # for headless error
+
 test_isa<-function(call){
   load('./test/R_functions/dataset.Rda')
   res_case<-isa_function(dataset_sorted)

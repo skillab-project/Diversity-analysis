@@ -1,3 +1,7 @@
+
+
+options(rgl.useNULL = TRUE) # for headless error
+
 ############ Call this script for run the analysis for all the codes ##############
 load('./Extras/New_occupation_table.Rda')
 load('./Extras/Skill_table.Rda')

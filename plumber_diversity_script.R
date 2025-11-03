@@ -17,6 +17,7 @@ library(formatR)
 library(jsonlite)
 library(ggplot2)
 
+options(rgl.useNULL = TRUE) # for headless error
 
 load('./Extras/New_occupation_table.Rda')
 source('./Extras/Diversity_analysis_KUs.R')
