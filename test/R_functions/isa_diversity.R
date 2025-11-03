@@ -18,12 +18,6 @@ library(dplyr)
 library(vegan)
 library(jakR)
 library(indicspecies)
-
-
-
-options(rgl.useNULL = TRUE) # for headless error
-
-
 set.seed(123)
 isa_function<-function(dataset){
   load('./Extras/Skill_table.Rda')

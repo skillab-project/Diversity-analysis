@@ -3,9 +3,6 @@ source('./test/R_functions/alpha_diversity.R')
 
 
 
-options(rgl.useNULL = TRUE) # for headless error
-
-
 test_alpha<-function(call){
 load('./test/R_functions/dataset.Rda')
 res_case<-alpha_diversity(dataset_sorted)

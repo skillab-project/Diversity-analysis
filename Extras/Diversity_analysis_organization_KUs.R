@@ -8,9 +8,6 @@ library(jakR)
 library(indicspecies)
 
 
-options(rgl.useNULL = TRUE) # for headless error
-
-
 # Set base URL and endpoint
 ################## Alpha diversity analysis ###############
 alpha_diversity_kus <- function(dataset){

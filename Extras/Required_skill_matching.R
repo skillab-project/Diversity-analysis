@@ -16,9 +16,6 @@ library(jsonlite)
 
 
 
-options(rgl.useNULL = TRUE) # for headless error
-
-
 required_skill_map<-function(skills_set,matching_number,New_occupation_table){
 occupations_all<-unique(New_occupation_table$Label4)
 

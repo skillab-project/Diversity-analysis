@@ -4,9 +4,6 @@ library(stringr)
 library(openxlsx)
 ############## load matrices skill-occupations ##########
 
-
-options(rgl.useNULL = TRUE) # for headless error
-
 mapping<-read_excel('./data/new_ESCO_mapping.xlsx')
 
 

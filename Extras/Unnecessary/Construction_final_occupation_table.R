@@ -1,9 +1,6 @@
 ############
 library(httr)
 
-
-options(rgl.useNULL = TRUE) # for headless error
-
 ######### load ##########
 load('./Extras/Skill_table.Rda')
 load('./Extras/Occupations_table.Rda')
