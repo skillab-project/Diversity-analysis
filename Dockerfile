@@ -2,6 +2,7 @@ FROM rocker/r-ver:4.3.1
 
 # Set CRAN mirror for R package installations
 ENV CRAN_MIRROR https://cran.rstudio.com
+ENV RGL_USE_NULL 1
 
 # Install system dependencies for R packages
 RUN apt-get update && apt-get install -y \
