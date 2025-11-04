@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   skillab-analysis:
     container_name: ${APP_NAME}
