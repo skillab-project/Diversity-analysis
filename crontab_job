@@ -1,2 +1,0 @@
-0 0 1 */1 * root /app/starting_script.sh >> /var/log/cron.log 2>&1
-# Runs at midnight on the 1st of every month

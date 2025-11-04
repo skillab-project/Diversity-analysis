@@ -1,9 +1,8 @@
 ############ Call this script for run the analysis for all the codes ##############
-load('./New_occupation_table.Rda')
-load('./Skill_table.Rda')
-source('./Diversity_Analysis.R')
-source('./Skill_job_matrix_construction.R')
-
+load('./Extras/New_occupation_table.Rda')
+load('./Extras/Skill_table.Rda')
+source('./Extras/Diversity_Analysis.R')
+source('./Extras/Skill_job_matrix_construction.R')
 library(httr)
 library(dotenv)
 ################ Authetication ##########################
@@ -53,5 +52,4 @@ for(code in codes){
   print(code)
   biodiversity_analysis(code)
 }
-
 

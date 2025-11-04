@@ -7,7 +7,6 @@ library(SpadeR)
 library(DT)
 library(plotly)
 library(fmsb)
-#library(ggradar)
 library(tidyverse)
 library(ggplot2)
 library(archetypes)
@@ -139,8 +138,28 @@ function(skill_list,matching_number=1) {
   # Call the main diversity function
   tryCatch({
     
-    
+    print(skill_list)
     data = required_skill_map(skill_list,matching_number,New_occupation_table)
+    
+  }, error = function(e) {
+    message = e$message
+    
+  })
+}
+
+
+
+
+
+#* @apiTitle Diversity Analysis all
+#* @apiDescription API for diversity run all
+
+#* @post /diversity_all
+function() {
+  
+  # Call the main diversity function
+  tryCatch({
+    source('./Extras/Main_script_for_results.R')
     
   }, error = function(e) {
     message = e$message
