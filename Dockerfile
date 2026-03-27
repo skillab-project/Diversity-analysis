@@ -1,5 +1,5 @@
 # Use the official R base image. Using a specific version is generally better for reproducibility.
-FROM rocker/r-ver:4.3.1
+FROM rocker/tidyverse:4.3.1
 
 # Set CRAN mirror for R package installations
 ENV CRAN_MIRROR https://cran.rstudio.com

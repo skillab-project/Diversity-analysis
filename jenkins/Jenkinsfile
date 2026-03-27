@@ -5,7 +5,7 @@ pipeline {
         }
     }
     environment {
-        APP_NAME = "skillab-diversity"
+        APP_NAME = "diversity-analysis"
         MAJOR_RELEASE = 0.1
         DOCKER_TAG = "${MAJOR_RELEASE}.${env.BUILD_NUMBER}"
         DOCKER_REG = "harbor.skillab-project.eu"
