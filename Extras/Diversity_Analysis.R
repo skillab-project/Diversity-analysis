@@ -7,7 +7,6 @@ library(DT)
 library(shiny)
 library(plotly)
 library(fmsb)
-#library(ggradar)
 library(tidyverse)
 library(ggplot2)
 library(Anthropometry)
@@ -85,13 +84,16 @@ biodiversity_analysis <-function(code){
   
   #### Numeric matrix preparation
   matrix <- c()
-  for(i in 1:10){
+  for(i in 1:100){
     for(role in roles){
       
       data_role <-data[data$Role==role,]
       
       no_selection<-max(c(round(nrow(data_role)/5),1))
       
+      if(no_selection>1000){
+        no_selection<-1000
+      }
       
       
       
