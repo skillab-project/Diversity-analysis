@@ -23,6 +23,18 @@ source('./Extras/Required_skill_matching.R')
 source('./Extras/Diversity_analysis_organization_KUs.R')
 
 
+
+
+tryCatch({
+  source('./Extras/Main_script_for_results.R')
+  
+}, error = function(e) {
+  message = e$message
+  
+})
+
+
+
 #* @apiTitle Diversity Microservice
 #* @apiDescription API for diversity calculators
 
