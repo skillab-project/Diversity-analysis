@@ -33,11 +33,6 @@ get_valid_token <- function(API_BASE_URL,USERNAME,PASSWORD) {
 dotenv::load_dot_env(".env")
 user <- Sys.getenv("USERNAME")
 pass <- Sys.getenv("PASSWORD")
-# Add a check to see if they are missing
-if (user == "" || pass == "" || url == "") {
-  stop("Missing required environment variables: USERNAME, PASSWORD, or URL")
-}
-
 url<-Sys.getenv("URL")
 tokenb<-get_valid_token(url,user,pass)
 

@@ -86,7 +86,7 @@ kus_results<-function(start_time,end_time){
   kus_data<-data_df$ku_vector
   
   
-  analysis_data<-data.frame(Organization=data_df$organization)
+  analysis_data<-data.frame(Organization=data_df$organization,Repo=data_df$repo_name)
   
   for(col in colnames(kus_data)){
     analysis_data[[col]]<-kus_data[[col]]
@@ -104,16 +104,18 @@ kus_results<-function(start_time,end_time){
   matrix <- c()
   data<-data_wanted
   
-  for(i in 1:10){
-    for(name in names){
+  for(name in names){
+    data_name <-data[data$Name==name,]
+    projects<-unique(data_name$Repo)
+    for(repo in projects){
       
-      data_role <-data[data$Name==name,]
+      data_role <-data_name[data_name$Repo==repo,]
       
-      no_selection<-max(c(round(nrow(data_role)/5),1))
+      no_selection<-max(c(round(nrow(data_role)),1))
       
       data_sample<-sample_n(data_role,no_selection)
       
-      skills <-data_sample[,2:ncol(data_sample)]
+      skills <-data_sample[,3:ncol(data_sample)]
       
       numeric_counts <- sapply(skills, function(column) sum(column))
       
@@ -227,7 +229,7 @@ kus_results<-function(start_time,end_time){
     
   }
   
-  
+  df_isa<-df_isa[order(df_isa$stat,decreasing=TRUE),]
   results_list$ISA=df_isa
   return(results_list)
 }
