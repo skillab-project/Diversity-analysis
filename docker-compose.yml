@@ -9,6 +9,11 @@ services:
       - URL=https://skillab-tracker.csd.auth.gr/api
     ports:
       - "8870:8870"    
+    volumes:
+      - diversity_data:/app/data
     labels:
       io.portainer.accesscontrol.teams: skillab-all
     restart: unless-stopped
+    
+volumes:
+  diversity_data:
