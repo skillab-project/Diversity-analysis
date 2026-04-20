@@ -23,6 +23,18 @@ source('./Extras/Required_skill_matching.R')
 source('./Extras/Diversity_analysis_organization_KUs.R')
 
 
+
+
+tryCatch({
+  source('./Extras/Main_script_for_results.R')
+
+}, error = function(e) {
+  message = e$message
+
+})
+
+
+
 #* @apiTitle Diversity Microservice
 #* @apiDescription API for diversity calculators
 
@@ -113,10 +125,15 @@ function(occupation_name) {
     load(paste0('./data/',occupational_code,'/Diversity_results.Rda'))
     
     res<-results_list$ISA_seperate
-    results<-res[!is.na(match(res$Group,occupation_name)),]
-    results<-results[order(results$stat,decreasing = TRUE),]
-    colnames(results)<-c('Role','Skill','Pillar','Value','SkillId')
-    data = results
+    if(!is.null(res)){
+      results<-res[!is.na(match(res$Group,occupation_name)),]
+      results<-results[order(results$stat,decreasing = TRUE),]
+      colnames(results)<-c('Role','Skill','Pillar','Value','SkillId')
+      data = results
+    }else{
+      data=NULL
+    }
+
     
   }, error = function(e) {
     message = e$message
