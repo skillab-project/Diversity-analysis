@@ -27,10 +27,10 @@ source('./Extras/Diversity_analysis_organization_KUs.R')
 
 tryCatch({
   source('./Extras/Main_script_for_results.R')
-
+  
 }, error = function(e) {
   message = e$message
-
+  
 })
 
 
@@ -125,15 +125,10 @@ function(occupation_name) {
     load(paste0('./data/',occupational_code,'/Diversity_results.Rda'))
     
     res<-results_list$ISA_seperate
-    if(!is.null(res)){
-      results<-res[!is.na(match(res$Group,occupation_name)),]
-      results<-results[order(results$stat,decreasing = TRUE),]
-      colnames(results)<-c('Role','Skill','Pillar','Value','SkillId')
-      data = results
-    }else{
-      data=NULL
-    }
-
+    results<-res[!is.na(match(res$Group,occupation_name)),]
+    results<-results[order(results$stat,decreasing = TRUE),]
+    colnames(results)<-c('Role','Skill','Pillar','Value','SkillId')
+    data = results
     
   }, error = function(e) {
     message = e$message
@@ -167,19 +162,3 @@ function(skill_list,matching_number=1) {
 
 
 
-
-#* @apiTitle Diversity Analysis all
-#* @apiDescription API for diversity run all
-
-#* @post /diversity_all
-function() {
-  
-  # Call the main diversity function
-  tryCatch({
-    source('./Extras/Main_script_for_results.R')
-    
-  }, error = function(e) {
-    message = e$message
-    
-  })
-}

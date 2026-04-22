@@ -16,34 +16,125 @@ jobs_gathering<-function(occupation_id,tokenb,URL_base){
     page = "1"
   )
   data = list(
-    occupation_ids = occupation_id
+    occupation_ids = occupation_id,
+    sources="OJA"
   )
   
   res <- httr::POST(url = paste0(URL_base,'/jobs'), httr::add_headers(.headers=headers), query = params, body = data, encode = "form")
   parsed_content <- content(res, "parsed")
   jobs_page1<-parsed_content$items
   count_of_jobs<-parsed_content$count
-  if(count_of_jobs>300){
-    iterations<-ceiling((count_of_jobs-300)/300)
-    jobs<-jobs_page1
-    for (j in 2:(iterations+1)){
-      print(j)
-      params = list(
-        page = as.character(j)
-      )
-      data = list(
-        occupation_ids = occupation_id
-      )
-      res <- httr::POST(url = paste0(URL_base,'/jobs'), httr::add_headers(.headers=headers), query = params, body = data, encode = "form")
-      parsed_content <- content(res, "parsed")
-      jobs_pagej<-parsed_content$items
-      jobs<-c(jobs,jobs_pagej)
-      
+  
+  if(count_of_jobs>1000){
+    indicator<-count_of_jobs<10000
+    if(indicator){
+      if(count_of_jobs>100){
+        iterations<-ceiling((count_of_jobs-100)/100)
+        jobs<-jobs_page1
+        for (j in 2:(iterations+1)){
+          print(j)
+          params = list(
+            page = as.character(j)
+          )
+          data = list(
+            occupation_ids = occupation_id,
+            sources="OJA"
+          )
+          res <- httr::POST(url = paste0(URL_base,'/jobs'), httr::add_headers(.headers=headers), query = params, body = data, encode = "form")
+          parsed_content <- content(res, "parsed")
+          jobs_pagej<-parsed_content$items
+          jobs<-c(jobs,jobs_pagej)
+          
+        }
+        
+      }else{
+        jobs<-jobs_page1
+      }
+    }else{
+      total_iterations<-ceiling((count_of_jobs)/100)
+      min<-total_iterations-100
+      max<-total_iterations+1
+      jobs<-c()
+      for(j in min:max){
+        print(j)
+        params = list(
+          page = as.character(j)
+        )
+        data = list(
+          occupation_ids = occupation_id,
+          sources="OJA"
+        )
+        res <- httr::POST(url = paste0(URL_base,'/jobs'), httr::add_headers(.headers=headers), query = params, body = data, encode = "form")
+        parsed_content <- content(res, "parsed")
+        jobs_pagej<-parsed_content$items
+        jobs<-c(jobs,jobs_pagej)
+      }
     }
-    
   }else{
-    jobs<-jobs_page1
+    headers = c(
+      accept = "application/json",
+      `Content-Type` = "application/x-www-form-urlencoded",
+      `Authorization` = paste("Bearer",tokenb)
+    )
+    params = list(
+      page = "1"
+    )
+    data = list(
+      occupation_ids = occupation_id,
+      sources=c("OJA,eures")
+    )
+    
+    res <- httr::POST(url = paste0(URL_base,'/jobs'), httr::add_headers(.headers=headers), query = params, body = data, encode = "form")
+    parsed_content <- content(res, "parsed")
+    jobs_page1<-parsed_content$items
+    count_of_jobs<-parsed_content$count
+    
+    indicator<-count_of_jobs<10000
+    if(indicator){
+      if(count_of_jobs>100){
+        iterations<-ceiling((count_of_jobs-100)/100)
+        jobs<-jobs_page1
+        for (j in 2:(iterations+1)){
+          print(j)
+          params = list(
+            page = as.character(j)
+          )
+          data = list(
+            occupation_ids = occupation_id,
+            sources=c("OJA,eures")
+          )
+          res <- httr::POST(url = paste0(URL_base,'/jobs'), httr::add_headers(.headers=headers), query = params, body = data, encode = "form")
+          parsed_content <- content(res, "parsed")
+          jobs_pagej<-parsed_content$items
+          jobs<-c(jobs,jobs_pagej)
+          
+        }
+        
+      }else{
+        jobs<-jobs_page1
+      }
+    }else{
+      total_iterations<-ceiling((count_of_jobs)/100)
+      min<-total_iterations-100
+      max<-total_iterations+1
+      jobs<-c()
+      for(j in min:max){
+        print(j)
+        params = list(
+          page = as.character(j)
+        )
+        data = list(
+          occupation_ids = occupation_id,
+          sources=c("OJA,eures")
+        )
+        res <- httr::POST(url = paste0(URL_base,'/jobs'), httr::add_headers(.headers=headers), query = params, body = data, encode = "form")
+        parsed_content <- content(res, "parsed")
+        jobs_pagej<-parsed_content$items
+        jobs<-c(jobs,jobs_pagej)
+      }
+    }
   }
+  
   
   
   return(jobs)
@@ -130,9 +221,8 @@ jobs_skill_analysis<-function(groups_all,token,URL_base){
 
 
 
-  
 
 
 
 
- 
+

@@ -20,7 +20,7 @@ library(jakR)
 library(indicspecies)
 set.seed(123)
 isa_function<-function(dataset){
-  load('./Extras/Skill_table.Rda')
+  load('./Skill_table.Rda')
   groups <-as.factor(dataset$Role)
   indval <- multipatt(dataset[2:ncol(dataset)], groups,
                       control = how(nperm=99)) 
