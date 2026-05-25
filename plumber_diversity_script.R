@@ -20,6 +20,10 @@ library(ggplot2)
 load('./Extras/New_occupation_table.Rda')
 load('./Extras/New_occupation_table2.Rda')
 
+occupation_table3<-New_occupation_table[c('id4',"label4","Codes")]
+occupation_table4<-New_occupation_table2[c("id4","label4","Codes")]
+occupation_table<-rbind(occupation_table3,occupation_table4)
+potential_occ<-read.csv('./Extras/Potential_occupations.csv')
 source('./Extras/Diversity_analysis_KUs.R')
 source('./Extras/Required_skill_matching.R')
 source('./Extras/Diversity_analysis_organization_KUs.R')
@@ -162,7 +166,7 @@ function(occupation_name) {
 
   # Call the main diversity function
   tryCatch({
-    occupational_code<-New_occupation_table$Codes[match(occupation_name,New_occupation_table$Label4)]
+    occupational_code<-occupation_table$Codes[match(occupation_name,occupation_table$label4)]
     load(paste0('./data/',occupational_code,'/Diversity_results.Rda'))
     
     res_alpha<-results_list$Alpha_results
@@ -185,17 +189,14 @@ function(occupation_name) {
 
 #* Find required skills for occupation requested
 #* @param occupation_name:string Occupation name selection (e.g."Applications programmers","Software developers","Systems analysts","Web and multimedia developers").
-#* @param option:integer Option for selection Occupation-level (option = 0) or Role-level (option = 1)
 #* @post /required_skills_service
-function(occupation_name,option) {
+function(occupation_name) {
   
   # Call the main diversity function
   tryCatch({
-    if(option==0){
-      occupational_code<-New_occupation_table$Codes[match(occupation_name,New_occupation_table$label4)]
-    }else if(option==1){
-      occupational_code<-New_occupation_table2$Codes[match(occupation_name,New_occupation_table2$label4)]
-    }
+    
+    occupational_code<-occupation_table$Codes[match(occupation_name,occupation_table$label4)]
+    
     load(paste0('./data/',occupational_code,'/Diversity_results.Rda'))
     
     res<-results_list$ISA_seperate
@@ -241,18 +242,14 @@ function(skill_list,matching_number=1) {
 
 #* Fit and competition
 #* @param occupation_name:string #Example "software developer"
-#* @param candidate_skills:list #Example "http://data.europa.eu/esco/skill/19a8293b-8e95-4de3-983f-77484079c389","http://data.europa.eu/esco/skill/ccd0a1d9-afda-43d9-b901-96344886e14d"
-# "http://data.europa.eu/esco/skill/b633eb55-8f1f-4ae6-ab4c-2022ffe2cb7f"
-#"http://data.europa.eu/esco/skill/4da171e5-779c-4983-a76f-91c16751e99f"
-# "http://data.europa.eu/esco/skill/bd14968e-e409-45af-b362-3495ed7b10e0"
-# "http://data.europa.eu/esco/skill/7111b95d-0ce3-441a-9d92-4c75d05c4388"
+#* @param candidate_skills:list #Example ["http://data.europa.eu/esco/skill/19a8293b-8e95-4de3-983f-77484079c389","http://data.europa.eu/esco/skill/ccd0a1d9-afda-43d9-b901-96344886e14d"]
 #* @post /fit_score_calculation_service
 function(occupation_name, candidate_skills) {
   
   tryCatch({
-    occupation_names <- trimws(New_occupation_table2$label4)
+    occupation_names <- trimws(occupation_table$label4)
     # 1. Load occupation data (same as before)
-    occupational_code <- New_occupation_table2$Codes[
+    occupational_code <- occupation_table$Codes[
       match(occupation_name, occupation_names)
     ]
     
@@ -304,14 +301,14 @@ function(occupation_name, candidate_skills) {
 
 #* Skill profile radar
 #* @param occupation_name:string #Example "software developer"
-#* @param candidate_skills:list #Example "http://data.europa.eu/esco/skill/19a8293b-8e95-4de3-983f-77484079c389","http://data.europa.eu/esco/skill/ccd0a1d9-afda-43d9-b901-96344886e14d"
+#* @param candidate_skills:list #Example ["http://data.europa.eu/esco/skill/19a8293b-8e95-4de3-983f-77484079c389","http://data.europa.eu/esco/skill/ccd0a1d9-afda-43d9-b901-96344886e14d"]
 #* @post /skill_profile_radar_data
 function(occupation_name, candidate_skills) {
   
   tryCatch({
-    occupation_names <- trimws(New_occupation_table2$label4)
+    occupation_names <- trimws(occupation_table$label4)
     # 1. Load occupation data (same as before)
-    occupational_code <- New_occupation_table2$Codes[
+    occupational_code <- occupation_table$Codes[
       match(occupation_name, occupation_names)
     ]
     
@@ -341,14 +338,14 @@ function(occupation_name, candidate_skills) {
 
 #* Skill and Knowledge gaps
 #* @param occupation_name:string #Example "software developer"
-#* @param candidate_skills:list #Example "http://data.europa.eu/esco/skill/19a8293b-8e95-4de3-983f-77484079c389","http://data.europa.eu/esco/skill/ccd0a1d9-afda-43d9-b901-96344886e14d"
+#* @param candidate_skills:list #Example ["http://data.europa.eu/esco/skill/19a8293b-8e95-4de3-983f-77484079c389","http://data.europa.eu/esco/skill/ccd0a1d9-afda-43d9-b901-96344886e14d"]
 #* @post /missing_skills
 function(occupation_name, candidate_skills) {
   
   tryCatch({
-    occupation_names <- trimws(New_occupation_table2$label4)
+    occupation_names <- trimws(occupation_table$label4)
     # 1. Load occupation data (same as before)
-    occupational_code <- New_occupation_table2$Codes[
+    occupational_code <- occupation_table$Codes[
       match(occupation_name, occupation_names)
     ]
     
@@ -377,14 +374,14 @@ function(occupation_name, candidate_skills) {
 
 #* Skill to learn step by step to increase his Fit
 #* @param occupation_name:string #Example "software developer"
-#* @param candidate_skills:list #Example "http://data.europa.eu/esco/skill/19a8293b-8e95-4de3-983f-77484079c389","http://data.europa.eu/esco/skill/ccd0a1d9-afda-43d9-b901-96344886e14d"
+#* @param candidate_skills:list #Example ["http://data.europa.eu/esco/skill/19a8293b-8e95-4de3-983f-77484079c389","http://data.europa.eu/esco/skill/ccd0a1d9-afda-43d9-b901-96344886e14d"]
 #* @post /skill_learning_lader
 function(occupation_name, candidate_skills) {
   
   tryCatch({
-    occupation_names <- trimws(New_occupation_table2$label4)
+    occupation_names <- trimws(occupation_table$label4)
     # 1. Load occupation data (same as before)
-    occupational_code <- New_occupation_table2$Codes[
+    occupational_code <- occupation_table$Codes[
       match(occupation_name, occupation_names)
     ]
     
@@ -436,14 +433,14 @@ function(occupation_name, candidate_skills) {
 
 #* Fit scores and relative standing for different roles
 #* @param occupation_name:string #Example "software developer"
-#* @param candidate_skills:list #Example "http://data.europa.eu/esco/skill/19a8293b-8e95-4de3-983f-77484079c389","http://data.europa.eu/esco/skill/ccd0a1d9-afda-43d9-b901-96344886e14d"
+#* @param candidate_skills:list #Example ["http://data.europa.eu/esco/skill/19a8293b-8e95-4de3-983f-77484079c389","http://data.europa.eu/esco/skill/ccd0a1d9-afda-43d9-b901-96344886e14d"]
 #* @post /alternative_careers
 function(occupation_name, candidate_skills) {
   
   tryCatch({
-    occupation_names <- trimws(New_occupation_table2$label4)
+    occupation_names <- trimws(occupation_table$label4)
     # 1. Load occupation data (same as before)
-    occupational_code <- New_occupation_table2$Codes[
+    occupational_code <- occupation_table$Codes[
       match(occupation_name, occupation_names)
     ]
     
@@ -494,14 +491,14 @@ function(occupation_name, candidate_skills) {
 
 #* Transferable skills of candidates to alternative occupations
 #* @param occupation_name:string #Example "software developer"
-#* @param candidate_skills:list #Example "http://data.europa.eu/esco/skill/19a8293b-8e95-4de3-983f-77484079c389","http://data.europa.eu/esco/skill/ccd0a1d9-afda-43d9-b901-96344886e14d"
+#* @param candidate_skills:list #Example ["http://data.europa.eu/esco/skill/19a8293b-8e95-4de3-983f-77484079c389","http://data.europa.eu/esco/skill/ccd0a1d9-afda-43d9-b901-96344886e14d"]
 #* @post /Transferable_skills
 function(occupation_name, candidate_skills) {
   
   tryCatch({
-    occupation_names <- trimws(New_occupation_table2$label4)
+    occupation_names <- trimws(occupation_table$label4)
     # 1. Load occupation data (same as before)
-    occupational_code <- New_occupation_table2$Codes[
+    occupational_code <- occupation_table$Codes[
       match(occupation_name, occupation_names)
     ]
     
@@ -598,14 +595,14 @@ function(occupation_name, candidate_skills) {
 
 #* Job description examples
 #* @param occupation_name:string #Example "software developer"
-#* @param candidate_skills:list #Example "http://data.europa.eu/esco/skill/19a8293b-8e95-4de3-983f-77484079c389","http://data.europa.eu/esco/skill/ccd0a1d9-afda-43d9-b901-96344886e14d"
+#* @param candidate_skills:list #Example ["http://data.europa.eu/esco/skill/19a8293b-8e95-4de3-983f-77484079c389","http://data.europa.eu/esco/skill/ccd0a1d9-afda-43d9-b901-96344886e14d"]
 #* @post /job_description
 function(occupation_name, candidate_skills) {
   
   tryCatch({
-    occupation_names <- trimws(New_occupation_table2$label4)
+    occupation_names <- trimws(occupation_table$label4)
     # 1. Load occupation data (same as before)
-    occupational_code <- New_occupation_table2$Codes[
+    occupational_code <- occupation_table$Codes[
       match(occupation_name, occupation_names)
     ]
     
@@ -677,7 +674,7 @@ function(occupation_name, candidate_skills) {
 
 
 #* Recommended role based on candidate skills
-#* @param candidate_skills:list #Example "http://data.europa.eu/esco/skill/19a8293b-8e95-4de3-983f-77484079c389","http://data.europa.eu/esco/skill/ccd0a1d9-afda-43d9-b901-96344886e14d"
+#* @param candidate_skills:list #Example ["http://data.europa.eu/esco/skill/19a8293b-8e95-4de3-983f-77484079c389","http://data.europa.eu/esco/skill/ccd0a1d9-afda-43d9-b901-96344886e14d"]
 #* @post /role_recommendation
 function(candidate_skills) {
   
@@ -686,9 +683,9 @@ function(candidate_skills) {
     occupations_all<-potential_occ
     fit_scores<-c()
     for(occupation_name in potential_occ$Roles){
-      occupation_names <- trimws(New_occupation_table2$label4)
+      occupation_names <- trimws(occupation_table$label4)
       # 1. Load occupation data (same as before)
-      occupational_code <- New_occupation_table2$Codes[
+      occupational_code <- occupation_table$Codes[
         match(occupation_name, occupation_names)
       ]
       
