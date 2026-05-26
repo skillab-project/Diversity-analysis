@@ -19,7 +19,7 @@ library(ggplot2)
 
 load('./Extras/New_occupation_table.Rda')
 load('./Extras/New_occupation_table2.Rda')
-
+load('./Extras/Skill_table.Rda')
 occupation_table3<-New_occupation_table[c('id4',"label4","Codes")]
 occupation_table4<-New_occupation_table2[c("id4","label4","Codes")]
 occupation_table<-rbind(occupation_table3,occupation_table4)
