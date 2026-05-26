@@ -83,8 +83,12 @@ pipeline {
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${DOCKER_REG_CREDS}", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]){
                     echo "***** Deploy Application *****"
                     sh 'docker login ${DOCKER_REG} -u ${USERNAME} -p ${PASSWORD}'
+					
+					sh 'docker compose down -v' // Stop and remove containers REMOVE if final
+					sh 'docker volume rm ${APP_NAME}_diversity_data || true' // Force delete the volume REMOVE if final
+
                     sh 'docker compose pull'
-                    sh 'docker compose up --build -d'
+                    sh 'docker compose up -d'
                     sh 'docker ps'
                 }
             }

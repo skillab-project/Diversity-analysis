@@ -46,7 +46,6 @@ RUN R -e "if (!requireNamespace('plumber', quietly = TRUE)) { stop('plumber not 
 # Copy your application code to the Docker container
 WORKDIR /app
 COPY . /app
-COPY ./data /app/data
 
 # Expose the API ports
 EXPOSE 8870
