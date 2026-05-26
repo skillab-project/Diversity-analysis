@@ -84,7 +84,7 @@ pipeline {
                     echo "***** Deploy Application *****"
                     sh 'docker login ${DOCKER_REG} -u ${USERNAME} -p ${PASSWORD}'
                     sh 'docker compose pull'
-                    sh 'docker compose up -d'
+                    sh 'docker compose up --build -d'
                     sh 'docker ps'
                 }
             }
