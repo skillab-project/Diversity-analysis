@@ -27,6 +27,30 @@ potential_occ<-read.csv('./Extras/Potential_occupations.csv')
 source('./Extras/Diversity_analysis_KUs.R')
 source('./Extras/Required_skill_matching.R')
 source('./Extras/Diversity_analysis_organization_KUs.R')
+get_valid_token <- function(API_BASE_URL,USERNAME,PASSWORD) {
+  response <- POST(
+    paste0(API_BASE_URL, "/login"),
+    body = list(username = USERNAME, password = PASSWORD),
+    encode = "json",
+    add_headers(
+      "accept" = "application/json",
+      "Content-Type" = "application/json"
+    ),
+    verbose()  # Debug authentication
+  )
+  
+  if (status_code(response) == 200) {
+    token <- gsub('"', "", content(response, "text"))
+    cat("Token acquired:", substr(token, 1, 20), "...\n")  # Log partial token
+    return(token)
+  } else {
+    stop(sprintf("Auth failed (Status %d): %s", 
+                 status_code(response),
+                 content(response, "text")))
+  }
+}
+
+
 
 ############## Functions ###########
 Fit_score_fnc<-function(candidate_skills,results_isa,ratio=0.5,Pillar="all"){
@@ -600,6 +624,14 @@ function(occupation_name, candidate_skills) {
 function(occupation_name, candidate_skills) {
   
   tryCatch({
+    
+    dotenv::load_dot_env("../.env")
+    user <- Sys.getenv("USERNAME")
+    pass <- Sys.getenv("PASSWORD")
+    url<-Sys.getenv("URL")
+    tokenb<-get_valid_token(url,user,pass)
+    URL_base<-url
+    
     occupation_names <- trimws(occupation_table$label4)
     # 1. Load occupation data (same as before)
     occupational_code <- occupation_table$Codes[
