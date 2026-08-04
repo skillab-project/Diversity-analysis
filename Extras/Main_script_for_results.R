@@ -1,5 +1,4 @@
 ############ Call this script for run the analysis for all the codes ##############
-load('./Extras/New_occupation_table2.Rda')
 load('./Extras/New_occupation_table.Rda')
 load('./Extras/Skill_table.Rda')
 source('./Extras/Diversity_Analysis.R')
@@ -37,59 +36,20 @@ pass <- Sys.getenv("PASSWORD")
 url<-Sys.getenv("URL")
 tokenb<-get_valid_token(url,user,pass)
 
-
-########################## Upper level ##########################
-##### Job gathering from Skill_job_matrix_construction.R
-codes<-unique(New_occupation_table2$Codes)
-groups<-unique(New_occupation_table2$Group)
-for(code in codes){
-  if (!dir.exists(paste0("data/",code))) {
-    dir.create(paste0("data/",code), recursive = TRUE)
-  }
-}
-### get_token
-groups2<-c(107,108,109,110,111)
-groups<-groups[!groups %in% groups2]
-
-jobs_skill_analysis(groups,token=tokenb,URL_base=url,occupation_table=New_occupation_table2)
-##### Diversity analysis for all the groups ########
-#codes<-c("C2511","C2512","C2513","C2514","C2519")
-for(code in codes){
-  print(code)
-  biodiversity_analysis(code)
-}
-
-
-########################## Level 4 ##########################
 ##### Job gathering from Skill_job_matrix_construction.R
 codes<-unique(New_occupation_table$Codes)
 groups<-unique(New_occupation_table$Group)
 
 for(code in codes){
-  if (!dir.exists(paste0("data/",code))) {
-    dir.create(paste0("data/",code), recursive = TRUE)
-  }
+if (!dir.exists(paste0("data/",code))) {
+  dir.create(paste0("data/",code), recursive = TRUE)
+}
 }
 ### get_token
-jobs_skill_analysis(groups,token=tokenb,URL_base=url,occupation_table=New_occupation_table)
+jobs_skill_analysis(groups,token=tokenb,URL_base=url)
 ##### Diversity analysis for all the groups ########
 for(code in codes){
   print(code)
-  names_all<-New_occupation_table$Label4[New_occupation_table$Codes == code]
-  codes<-New_occupation_table2[New_occupation_table2$label3 %in% names_all,c("label3","Codes")]
-  code_list<-list()
-  for(code1 in unique(codes$Codes)){
-    nm<-codes$label3[codes$Codes==code1]
-    code_list[nm]<-code1
-  }
-  biodiversity_analysis(code,option=1,code_list)
+  biodiversity_analysis(code)
 }
-
-
-
-
-
-############################# Profiles query (based on availabilty on ) ####################
-
-
 

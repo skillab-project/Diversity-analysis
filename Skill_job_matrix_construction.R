@@ -24,7 +24,7 @@ jobs_gathering<-function(occupation_id,tokenb,URL_base){
   parsed_content <- content(res, "parsed")
   jobs_page1<-parsed_content$items
   count_of_jobs<-parsed_content$count
-  
+   
   if(count_of_jobs>1000){
     indicator<-count_of_jobs<10000
     if(indicator){
@@ -221,8 +221,9 @@ jobs_skill_analysis<-function(groups_all,token,URL_base){
 
 
 
+  
 
 
 
 
-
+ 
