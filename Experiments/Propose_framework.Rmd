@@ -1,0 +1,233 @@
+---
+title: "EU Citizen"
+author: "D.Trygoniaris"
+date: "2026-05-21"
+output:
+  word_document: default
+  html_document: default
+always_allow_html: yes
+---
+
+*Setup for Citizen*
+
+[Define the citizen KSTs]{.underline}
+
+**Skills (S)**:
+
+1.  Java
+2.  Python
+3.  C ++
+
+**Knowledge (K):**
+
+1.  MySQL
+2.  cloud technologies
+3.  project management
+
+**Target role**: Software Developer
+
+```{r, echo=FALSE}
+
+candidate_skillset<-c("http://data.europa.eu/esco/skill/19a8293b-8e95-4de3-983f-77484079c389","http://data.europa.eu/esco/skill/ccd0a1d9-afda-43d9-b901-96344886e14d","http://data.europa.eu/esco/skill/b633eb55-8f1f-4ae6-ab4c-2022ffe2cb7f","http://data.europa.eu/esco/skill/4da171e5-779c-4983-a76f-91c16751e99f","http://data.europa.eu/esco/skill/bd14968e-e409-45af-b362-3495ed7b10e0","http://data.europa.eu/esco/skill/7111b95d-0ce3-441a-9d92-4c75d05c4388")
+
+
+
+load('C:/Users/30697/Desktop/SKILLAB/Services/Services_current/Diversity_service_working/data/C2512/Diversity_results.Rda')
+skills2<-results_list$ISA_seperate
+
+candidate_skill_names <- skills2$Skill[
+  match(candidate_skillset, skills2$Skill_id)
+]
+role<-"software developer"
+
+skills<-skills2[skills2$Occupation==role,]
+```
+
+**Fit score**: Overall measure between candidate's skillset alignment with job demand
+
+```{r,echo=FALSE}
+Fit_score_fnc<-function(candidate_skills,results_isa,ratio=0.5,Pillar="all"){
+  #candidate_skills<-results_isa$Skill_id[c(2,10,12,15)]
+  # 2. Matching logic
+  required_skills <- results_isa$Skill
+  
+  candidate<- results_isa[c("Skill","Skill_id","Importance","Pillar")]
+  if(Pillar=="all"){
+    n_skills<-round(nrow(candidate)*ratio)
+    candidate<-candidate[1:n_skills,]
+    required_skills<-required_skills[1:n_skills]
+    candidate$Value<-ifelse(required_skills %in% candidate_skills,1,0) 
+  }else{
+    candidate<-candidate[candidate$Pillar==Pillar,]
+    n_skills<-round(nrow(candidate)*ratio)
+    candidate<-candidate[1:n_skills,]
+    required_skills<-required_skills[1:n_skills]
+    candidate$Value<-ifelse(required_skills %in% candidate_skills,1,0)
+  }
+
+  
+  
+  Fit.Score<-round(sum(candidate$Value*candidate$Importance)/sum(candidate$Importance),2)
+  return(Fit.Score)
+}
+
+
+if(nrow(skills)>40){
+  Fit_all<-Fit_score_fnc(candidate_skill_names,skills,ratio=0.2,Pillar="all")
+}else if(nrow(skill)<=20){
+   Fit_all<-Fit_score_fnc(candidate_skill_names,skills,ratio=1,Pillar="all")
+}else{
+  Fit_all<-Fit_score_fnc(candidate_skill_names,skills,ratio=0.5,Pillar="all")
+}
+
+
+
+skills_s<-skills[skills$Pillar=="S",]
+
+if(nrow(skills_s)>40){
+  Fit_s<-Fit_score_fnc(candidate_skill_names,skills_s,ratio=0.2,Pillar="S")
+}else if(nrow(skills_s)<=20){
+   Fit_s<-Fit_score_fnc(candidate_skill_names,skills_s,ratio=1,Pillar="S")
+}else{
+  Fit_s<-Fit_score_fnc(candidate_skill_names,skills_s,ratio=0.5,Pillar="S")
+}
+
+
+skills_k<-skills[skills$Pillar=="K",]
+
+if(nrow(skills_k)>40){
+  Fit_k<-Fit_score_fnc(candidate_skill_names,skills_k,ratio=0.2,Pillar="K")
+}else if(nrow(skills_k)<=20){
+   Fit_k<-Fit_score_fnc(candidate_skill_names,skills_k,ratio=1,Pillar="K")
+}else{
+  Fit_k<-Fit_score_fnc(candidate_skill_names,skills_k,ratio=0.5,Pillar="K")
+}
+print(paste0("Fit score of the candidate: ",Fit_all))
+print(paste0("Fit score of the candidates on skills: ",Fit_s))
+print(paste0("Fit score of the candidates on knowledge: ",Fit_k))
+```
+
+***Missing skills and competences***
+
+```{r,echo=FALSE}
+
+Missing_skills_fnc<-function(candidate_skills,results_isa){
+  #candidate_skills<-results_isa$Skill_id[c(2,10,12,15)]
+  
+  # 2. Matching logic
+  required_skills <- results_isa$Skill
+  
+  #matched <- required_skills[required_skills %in% candidate_skills]
+  
+  missing <- setdiff(required_skills, candidate_skills)
+  
+  missing_df <- results_isa[results_isa$Skill %in% missing,c("Skill","Importance")]
+  row.names(missing_df)<-NULL
+  return(missing_df)
+  
+}
+print("######### Skill ###################")
+missing_s <- Missing_skills_fnc(candidate_skill_names,skills_s)
+print(missing_s)
+
+
+print("######### Knowledge ###################")
+missing_k <- Missing_skills_fnc(candidate_skill_names,skills_k)
+print(missing_k)
+```
+
+***Competition standing***
+
+```{r,echo=FALSE}
+load('C:/Users/30697/Desktop/SKILLAB/Services/Services_current/Diversity_service_working/Experiments/C2512_FitScores.Rda')
+
+
+wanted<-res_all$`software developer`
+
+percentile <- round(100 * mean(wanted < Fit_all))
+print(paste0("The candidate is aligned higher than ",percentile,"% of the competitors."))
+
+```
+
+```{r, echo=FALSE}
+
+scores <- wanted
+candidate_score <- Fit_all
+
+F <- ecdf(scores)
+
+plot(F,
+     main = "Candidate Percentile Rank",
+     xlab = "Score",
+     ylab = "Proportion below score")
+
+abline(v = candidate_score)
+abline(h = F(candidate_score))
+```
+
+**Skills need to learn to achieve higher than 99% of the competition**
+
+```{r, echo=FALSE}
+
+desired_fit<-quantile(wanted,probs=0.99)
+
+missing_skills<-Missing_skills_fnc(candidate_skill_names,skills)
+new_skills<-c()
+for(skill in missing_skills$Skill){
+  new_skills<-c(new_skills,skill)
+  
+  
+  if(nrow(skills)>40){
+  Fit_all<-Fit_score_fnc(c(candidate_skill_names,new_skills),skills,ratio=0.2,Pillar="all")
+  }else if(nrow(skill)<=20){
+   Fit_all<-Fit_score_fnc(c(candidate_skill_names,new_skills),skills,ratio=1,Pillar="all")
+  }else{
+  Fit_all<-Fit_score_fnc(c(candidate_skill_names,new_skills),skills,ratio=0.5,Pillar="all")
+  }
+  
+  if(Fit_all>=desired_fit){
+    break
+  }
+}
+
+
+skills_need_to_learn<-missing_skills[missing_skills$Skill %in% new_skills,]
+print("KSTs need to learn to stand above 99% of the competition:")
+print(skills_need_to_learn)
+```
+
+**Alternative career paths**
+
+```{r, echo=FALSE}
+
+occupation_standing<-list()
+for(occupation in setdiff(names(res_all),role)){
+  wanted<-res_all[[occupation]]
+  
+  skill<-skills2[skills2$Occupation==occupation,]
+  
+  
+  if(nrow(skills)>40){
+  Fit_allr<-Fit_score_fnc(candidate_skill_names,skills,ratio=0.2,Pillar="all")
+  }else if(nrow(skill)<=20){
+   Fit_allr<-Fit_score_fnc(candidate_skill_names,skills,ratio=1,Pillar="all")
+  }else{
+  Fit_allr<-Fit_score_fnc(candidate_skill_names,skills,ratio=0.5,Pillar="all")
+  }
+  
+  
+  
+  percentile1 <- round(100 * mean(wanted < Fit_allr))
+  
+  occupation_standing[[occupation]]<-percentile1
+}
+
+occupation_standing[[role]]<-percentile
+
+potential_occs<-sort(unlist(occupation_standing),decreasing=TRUE)
+
+df<-data.frame(Priority=1:length(potential_occs),`Career to Pursuit`=names(potential_occs),`Relative Standing`=paste0(potential_occs,"%"))
+row.names(df)<-NULL
+colnames(df)<-c("Priority","Career to Pursuit","Relative Standing")
+df
+```
